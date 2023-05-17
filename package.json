@@ -1,0 +1,23 @@
+{
+  "name": "imoveis-business-inteligence-upf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "puppeteer": "^20.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gutoneitzke/imoveis-business-inteligence-upf.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gutoneitzke/imoveis-business-inteligence-upf/issues"
+  },
+  "homepage": "https://github.com/Gutoneitzke/imoveis-business-inteligence-upf#readme"
+}
