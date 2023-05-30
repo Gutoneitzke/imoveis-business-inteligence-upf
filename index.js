@@ -60,12 +60,12 @@ async function getElements()
     const children = paginationBox;
     return children[children.length - 2].querySelector("a").textContent;
   });
-  console.log('Tem: ',pages, ' páginas');
+  // console.log('Tem: ',pages, ' páginas');
 
   // Pegando infos dos imoveis
   for(let i = 0; i < 2; i++)
   {
-    console.log("LOADING - Pegando infos dos imoveis",element7.link+'?pagina='+`${i+1}`);
+    // console.log("LOADING - Pegando infos dos imoveis",element7.link+'?pagina='+`${i+1}`);
     await page.goto(element7.link+'?pagina='+`${i+1}`);
   
     let result = await page.evaluate(() => {
@@ -92,11 +92,11 @@ async function getElements()
     });
   }
 
-  console.log("Informações dos imóveis: ",element7.result);
+  // console.log("Informações dos imóveis: ",element7.result);
 
   // Quantidade de imovies - Total
   let element1 = links[1];
-  console.log("LOADING - Quantidade de imovies - Total: ",element1.link);
+  // console.log("LOADING - Quantidade de imovies - Total: ",element1.link);
   await page.goto(element1.link);
 
   element1.result = await page.evaluate(() => {
@@ -104,18 +104,18 @@ async function getElements()
     return propertyContainer.querySelector('h1').textContent.trim();
   });
 
-  console.log("Quantidade de imovies - Total: ",element1.result);
+  // console.log("Quantidade de imovies - Total: ",element1.result);
 
   // Taxa de juros
   let element2 = links[6];
-  console.log("LOADING - Taxa de juros: ",element2.link);
+  // console.log("LOADING - Taxa de juros: ",element2.link);
   await page.goto(element2.link);
 
   element2.result = await page.evaluate(() => {
     return document.querySelector('.wp-block-quote').querySelector('strong').textContent;
   });
 
-  console.log("Taxa de juros: ",element2.result);
+  // console.log("Taxa de juros: ",element2.result);
 
   // Cálculos
   let totalDormitorios = 0;
@@ -134,7 +134,7 @@ async function getElements()
     // console.log('preco DEPOIS',preco)
 
     totalDormitorios += !element7['result'][i]['dormitorios'] ? 1 : parseInt(element7['result'][i]['dormitorios']);
-    console.log('totalDormitorios',totalDormitorios);
+    // console.log('totalDormitorios',totalDormitorios);
     
     somaAreas += !metragemTotal ? !metragemPrivativa ? 0 : metragemPrivativa : metragemTotal;
 
@@ -159,31 +159,48 @@ async function getElements()
   }
 
   // preco_medio_metro_quadrado
-  console.log('preco_medio_metro_quadrado', totalValores, somaAreas)
+  // console.log('preco_medio_metro_quadrado', totalValores, somaAreas)
   links[0]['result'] = totalValores / somaAreas;
   links[0]['result'].toFixed(2);
 
   // preco_medio_imovies
-  console.log('preco_medio_imovies', totalValores, parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", ".")))
+  // console.log('preco_medio_imovies', totalValores, parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", ".")))
   links[2]['result'] = totalValores / parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", "."));
   links[2]['result'].toFixed(2);
 
   // quantidade_imovies_por_regiao
-  console.log('quantidade_imovies_por_regiao', totalRs, totalSc)
+  // console.log('quantidade_imovies_por_regiao', totalRs, totalSc)
   links[3]['result'].rs = totalRs;
   links[3]['result'].sc = totalSc;
 
   // media_de_dormitorios
-  console.log('media_de_dormitorios', totalDormitorios, parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", ".")))
+  // console.log('media_de_dormitorios', totalDormitorios, parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", ".")))
   links[4]['result'] =  totalDormitorios / parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", "."));
 
   // preco_aluguel_medio
-  console.log('preco_aluguel_medio', totalValoresAluguel, totalAluguel)
+  // console.log('preco_aluguel_medio', totalValoresAluguel, totalAluguel)
   links[5]['result'] = totalValoresAluguel / totalAluguel;
 
   // Resultado
-  console.log("**********************");
+  // console.log("**********************");
   console.log(links);
+
+  // Obter as chaves do primeiro objeto para definir o cabeçalho
+  const cabecalho = Object.keys(links[0]);
+
+  // Criar as linhas do CSV
+  const linhas = links.map(objeto => {
+    const valores = cabecalho.map(coluna => {
+      const valor = objeto[coluna];
+      return typeof valor === 'object' ? JSON.stringify(valor) : valor;
+    });
+    return valores.join(',');
+  });
+
+  // Juntar o cabeçalho e as linhas em uma única string CSV
+  const csv = [cabecalho.join(','), ...linhas].join('\n');
+
+  console.log('csv -> ',csv);
   
 };
 
