@@ -5,48 +5,56 @@ const links = [
   {
     slug: 'preco_medio_metro_quadrado',
     link: url,
-    result: [] // ok - só falta pegar todos
+    result: 0 // ok
   },
   {
     slug: 'quantidade_imovies_total',
     link: url,
-    result: [] // ok
+    result: 0 // ok
   },
   {
     slug: 'preco_medio_imovies',
     link: url,
-    result: [] // ok - só falta pegar todos
+    result: [] // ok
   },
   {
     slug: 'quantidade_imovies_por_regiao',
     link: url,
-    result: [] // ok - só falta pegar todos
+    result: {
+      rs: 0,
+      sc: 0
+    } // ok
   },
   {
     slug: 'media_de_dormitorios',
     link: url,
-    result: [] // ok - só falta pegar todos
+    result: [] // ok
   },
   {
     slug: 'preco_aluguel_medio',
     link: url,
-    result: [] // ok - só falta pegar todos
+    result: [] // ok
   },
   {
     slug: 'taxa_juros',
     link: 'https://blog.nubank.com.br/taxa-selic/',
     result: [] // ok
   },
+  {
+    slug: 'all_data',
+    link: url,
+    result: []
+  }
 ]
 
 async function getElements()
 {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  let element0 = links[0];
+  let element7 = links[7];
 
   // Pegando a quantidade de páginas
-  await page.goto(element0.link+'/?pagina=1');
+  await page.goto(element7.link+'/?pagina=1');
   const pages = await page.evaluate(() => {
     const paginationBox = document.querySelector(".pagination").children;
     const children = paginationBox;
@@ -57,8 +65,8 @@ async function getElements()
   // Pegando infos dos imoveis
   for(let i = 0; i < 2; i++)
   {
-    console.log("LOADING - Pegando infos dos imoveis",element0.link+'?pagina='+`${i+1}`);
-    await page.goto(element0.link+'?pagina='+`${i+1}`);
+    console.log("LOADING - Pegando infos dos imoveis",element7.link+'?pagina='+`${i+1}`);
+    await page.goto(element7.link+'?pagina='+`${i+1}`);
   
     let result = await page.evaluate(() => {
       const propertyContainer = document.getElementById('conteudoImoveis');
@@ -80,11 +88,11 @@ async function getElements()
     });
 
     result.forEach(objeto => {
-      element0.result.push(objeto);
+      element7.result.push(objeto);
     });
   }
 
-  console.log("Informações dos imóveis: ",element0.result);
+  console.log("Informações dos imóveis: ",element7.result);
 
   // Quantidade de imovies - Total
   let element1 = links[1];
@@ -109,9 +117,73 @@ async function getElements()
 
   console.log("Taxa de juros: ",element2.result);
 
+  // Cálculos
+  let totalDormitorios = 0;
+  let totalValores = 0;
+  let totalAluguel = 0;
+  let totalValoresAluguel = 0;
+  let totalRs = 0;
+  let totalSc = 0;
+  let somaAreas = 0;
+  for(let i = 0; i < element7['result'].length; i++)
+  {
+    let metragemTotal = parseInt(element7['result'][i]['metragemTotal']?.replace(/[^\d,]/g, "").replace(",", "."));
+    let metragemPrivativa = parseInt(element7['result'][i]['metragemPrivativa']?.replace(/[^\d,]/g, "").replace(",", "."));
+    // console.log('preco ANTES',element7['result'][i]['preco']);
+    let preco = parseInt(element7['result'][i]['preco']?.replace(/[^\d,]/g, "").replace(",", "."));
+    // console.log('preco DEPOIS',preco)
+
+    totalDormitorios += !element7['result'][i]['dormitorios'] ? 1 : parseInt(element7['result'][i]['dormitorios']);
+    console.log('totalDormitorios',totalDormitorios);
+    
+    somaAreas += !metragemTotal ? !metragemPrivativa ? 0 : metragemPrivativa : metragemTotal;
+
+    if(element7['result'][i]['status'] == 'Aluguel')
+    {
+      totalValoresAluguel += !preco ? 0 : preco;
+      totalAluguel++;
+    }
+    else
+    {
+      totalValores += !preco ? 0 : preco;
+    }
+
+    if(element7['result'][i]['estado'] == 'RS')
+    {
+      totalRs++;
+    }
+    else
+    {
+      totalSc++;
+    }
+  }
+
+  // preco_medio_metro_quadrado
+  console.log('preco_medio_metro_quadrado', totalValores, somaAreas)
+  links[0]['result'] = totalValores / somaAreas;
+  links[0]['result'].toFixed(2);
+
+  // preco_medio_imovies
+  console.log('preco_medio_imovies', totalValores, parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", ".")))
+  links[2]['result'] = totalValores / parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", "."));
+  links[2]['result'].toFixed(2);
+
+  // quantidade_imovies_por_regiao
+  console.log('quantidade_imovies_por_regiao', totalRs, totalSc)
+  links[3]['result'].rs = totalRs;
+  links[3]['result'].sc = totalSc;
+
+  // media_de_dormitorios
+  console.log('media_de_dormitorios', totalDormitorios, parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", ".")))
+  links[4]['result'] =  totalDormitorios / parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", "."));
+
+  // preco_aluguel_medio
+  console.log('preco_aluguel_medio', totalValoresAluguel, totalAluguel)
+  links[5]['result'] = totalValoresAluguel / totalAluguel;
+
   // Resultado
   console.log("**********************");
-  console.log(links)
+  console.log(links);
   
 };
 
