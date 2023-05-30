@@ -1,6 +1,8 @@
 const puppeteer = require('puppeteer');
 
 const url = "https://barcimoveis.com.br/busca/";
+var time = 0;
+var timer = setInterval(() => {time++},1000);
 const links = [
   {
     slug: 'preco_medio_metro_quadrado',
@@ -63,7 +65,7 @@ async function getElements()
   // console.log('Tem: ',pages, ' páginas');
 
   // Pegando infos dos imoveis
-  for(let i = 0; i < 2; i++)
+  for(let i = 0; i < 1; i++)
   {
     // console.log("LOADING - Pegando infos dos imoveis",element7.link+'?pagina='+`${i+1}`);
     await page.goto(element7.link+'?pagina='+`${i+1}`);
@@ -199,9 +201,10 @@ async function getElements()
 
   // Juntar o cabeçalho e as linhas em uma única string CSV
   const csv = [cabecalho.join(','), ...linhas].join('\n');
-
   console.log('csv -> ',csv);
-  
+  console.log('time -> ',time);
+  clearInterval(timer);
+  process.exit();
 };
 
 getElements()
