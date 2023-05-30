@@ -65,7 +65,7 @@ async function getElements()
   // console.log('Tem: ',pages, ' páginas');
 
   // Pegando infos dos imoveis
-  for(let i = 0; i < 1; i++)
+  for(let i = 0; i < parseInt(links[1]['result'].replace(/[^\d,]/g, "").replace(",", ".")); i++)
   {
     // console.log("LOADING - Pegando infos dos imoveis",element7.link+'?pagina='+`${i+1}`);
     await page.goto(element7.link+'?pagina='+`${i+1}`);
