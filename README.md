@@ -2,6 +2,7 @@
 
 ### Alunos: Gustavo Neitzke e Gustavo Bedin
 ### BI: <a href='https://docs.google.com/spreadsheets/d/1rTISXE6EywPsUFkSkK3lFwd6F9J6imy8bQrI0eGN2KM/edit?usp=sharing'>Accessar</a>
+### Vídeo de apresentação: <a href='https://drive.google.com/file/d/18E6Rzsb_fmgfVtHz-166bPiQFLT5rFtO/view?usp=sharing'>Visualizar</a>
 
 
 ## Questões:
