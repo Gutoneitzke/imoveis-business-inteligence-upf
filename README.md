@@ -2,6 +2,7 @@
 
 ### Alunos: Gustavo Neitzke e Gustavo Bedin
 ### BI: <a href='https://docs.google.com/spreadsheets/d/1rTISXE6EywPsUFkSkK3lFwd6F9J6imy8bQrI0eGN2KM/edit?usp=sharing'>Accessar</a>
+<img width="1231" alt="Captura de Tela 2023-06-14 às 20 53 12" src="https://github.com/Gutoneitzke/imoveis-business-inteligence-upf/assets/18150462/8ada4982-2878-432e-9761-442834dc212c">
 
 ### Vídeo de apresentação: <a href='https://drive.google.com/file/d/18E6Rzsb_fmgfVtHz-166bPiQFLT5rFtO/view?usp=sharing'>Visualizar</a>
 
